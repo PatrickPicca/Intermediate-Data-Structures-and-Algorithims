@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+
+typedef pair<int, int> iPair;
+
+void addEdge(vector <pair<int, int> > vector[], int start, int end, int cost)
+{
+    vector[start].push_back(make_pair(end, cost));
+    vector[end].push_back(make_pair(start, cost));
+}
+
+//SSSP function that returns the cost of the shortest path from source to target number
+void shortestPath(vector<pair<int, int> > theVector[], int numNodes, int src, int target)
+{
+    //Create priority queue to store the nodes being processed.
+    priority_queue< iPair, vector <iPair>, greater <iPair> > theQueue;
+
+    //Creates a vector for the edge distances, starting with all of them being infinite
+    vector<int> dist(numNodes, INT_MAX);
+
+    //First node is the starting node, setting its own distance to 0
+    theQueue.push(make_pair(0, src));
+    dist[src] = 0;
+
+    while (!theQueue.empty())
+    {
+        //The first node is always the shortest distance option to choose from. 
+        int label = theQueue.top().second;
+        theQueue.pop();
+
+        //Obtains all adjacent nodes to the current node and their edge weights
+        for (auto x : theVector[label])
+        {
+            int current = x.first;
+            int weight = x.second;
+
+            //If a lower cost path is located, replace the current cost with it
+            if (dist[current] > dist[label] + weight)
+            {
+                dist[current] = dist[label] + weight;
+                theQueue.push(make_pair(dist[current], current));
+            }
+        }
+    }
+        cout << dist[target];
+}
+
+
+// Driver program to test methods of graph class
+int main()
+{
+  ios_base::sync_with_stdio(false);
+
+    int numDevices;
+    int numPossibleConnections;
+    cin >> numDevices;
+    cin >> numPossibleConnections;
+
+
+    int startTarget;
+    int endTarget;
+    cin >> startTarget;
+    cin >> endTarget;
+
+    int node1;
+    int node2;
+    int edgeCost;
+    vector<iPair > ourEdges[numDevices];
+    for (int i = 0; i < numPossibleConnections; i++)
+    {
+        cin >> node1;
+        cin >> node2;
+        cin >> edgeCost;
+
+        ourEdges[node1].push_back(make_pair(node2, edgeCost));
+
+        ourEdges[node2].push_back(make_pair(node1, edgeCost));
+    }
+
+    
+    shortestPath(ourEdges, numDevices, startTarget, endTarget);
+
+    return 0;
+}

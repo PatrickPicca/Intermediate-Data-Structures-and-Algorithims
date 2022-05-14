@@ -1,0 +1,140 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+ 
+ // Utility function to find minimum of three numbers
+int min(int x, int y, int z) 
+{ 
+    return min(min(x, y), z); 
+}
+  
+int WeightedEditDistance(vector<int> aNumbers, int sizeOFa, vector<int> bNumbers, int sizeOFb)
+{
+    int totalcost = 0;
+    cout << totalcost;
+    
+    
+    if (sizeOFa > sizeOFb)
+    {
+        //cout << "Size of A is greater than size of B" << endl;
+        
+        int differentOfElements = sizeOFa - sizeOFb;
+        int indexOfMin;
+        while (differentOfElements > 0)
+        {
+            //cout << "In while loop" << endl;
+            
+            int currentMin = 0;
+            //int indexOfMin;
+            //Iterates through aNumbers and finds the index and value of the lowest value within aNumbers
+            for(int i = 0; i < sizeOFa; i++)
+            {
+                //cout << "In for loop, value of i:" << i << endl;
+                //cout << "Size of sizeOFa is:" << sizeOFa << endl;
+                if (i == 0)
+                {
+                    currentMin = aNumbers[i];
+                }
+                else if (aNumbers[i] < currentMin)
+                {
+                    currentMin = aNumbers[i];
+                    indexOfMin = i;
+                }
+                //i++;
+                //cout << "After ifs" << endl;
+                //cout << "for loop" << endl;
+            }
+            //cout << "here after iterating through vector A" << endl;
+            //Removes that element from our first vectorA and adds that removed numbers value to our total
+            //cout << "index: " << indexOfMin - 1 << endl;
+            //aNumbers.erase(indexOfMin - 1);
+            aNumbers.erase(aNumbers.begin() + indexOfMin);
+            //cout << "after ERASE";
+            differentOfElements --;
+            totalcost += currentMin;
+            //cout << totalcost;
+            //cout << currentMin;
+           // cout << "after for loop";
+            //cout << "here end of current while iteration" << endl;
+        }
+        
+    }
+   // cout << "before comparing anything total cost is: " << totalcost << endl;;
+    //cout << "Both vectors are now the same size" << endl;
+    
+    //Assumes at this point both vectors are the same size
+    //cout << endl;
+    for (int i = 0; i < sizeOFa; i++){
+        //cout << aNumbers[i] << " " << endl;
+    }
+    //cout << "size of b: " << sizeOFa << endl;
+    
+    for (int i = 0; i < sizeOFb; i++)
+    {
+        
+        if (aNumbers[i] > bNumbers[i])
+        {
+            int different = 0;
+            different = aNumbers[i] - bNumbers[i];
+            //cout << aNumbers[i] << " - " << bNumbers[i] << ": " << different;
+            aNumbers[i] = aNumbers[i] - different;
+    
+            totalcost += different;
+        }
+        else if (aNumbers[i] < bNumbers[i])
+        {
+            int different = bNumbers[i] - aNumbers[i];
+            aNumbers[i] = bNumbers[i] - different;
+            totalcost += different;
+            //cout << "here" << endl;
+        }
+    }
+    //cout << totalcost;
+    return totalcost;
+}
+
+
+int main()
+{
+    int aSize = 0;
+    int bSize = 0;
+    cin >> aSize;
+    cin >> bSize;
+    
+    
+    
+    vector<int> vectorA(aSize);
+    vector<int> vectorB(bSize);
+    
+    //cout << "Created our 2 vectors " << endl;
+    
+    for(int i = 0; i < aSize; i++)
+    {
+        cin >> vectorA[i];
+     //   cout << vectorA[i] << " ";
+    }
+    
+    //cout << "Finished assigning values to vector A " << endl;
+    
+    for(int i = 0; i < bSize; i++)
+    {
+        cin >> vectorB[i];
+        //cout << vectorB[i] << " ";
+    }
+    
+    for(int i = 0; i < bSize; i++)
+    {
+       // cout << vectorB[i] << " ";
+    }
+    //cout << endl;
+    
+    int cost = 0;
+    //cout << cost;
+    //cout << "Finished assigning values to vector B " << endl;
+    //cout << "Value of cost is " << cost << endl;
+    
+    cout << WeightedEditDistance(vectorA, aSize, vectorB, bSize);
+    return 0;
+}

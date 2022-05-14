@@ -1,0 +1,78 @@
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+int knapSack(short totalWeight, short weights[], short values[], short num)
+{
+    //Vector of in vectors
+    vector<vector<int>> temp(num+1,vector<int>(totalWeight+1));
+    int x = 0;
+    int y = 0;
+    for (x = 0; x <= num; x++) 
+    {
+        for (y = 0; y <= totalWeight; y++) 
+        {
+            //base case return 0
+            if (x == 0 || y == 0)
+            {
+                temp[x][y] = 0;
+            }
+            //Else if that returns the max of 2 cases, where we return with the selected item or not.
+            else if (weights[x-1] <= y)
+            {
+                //temp[x][y] = max(values[x-1] + temp[x-1][y - weights[x-1]], temp[x-1][y]);
+                
+                int a = values[x-1] + temp[x-1][y - weights[x-1]];
+                int b = temp[x-1][y];
+                
+                if (a >= b)
+                    temp[x][y] = a;
+                else
+                    temp[x][y] = b;
+            }
+            else
+            {
+                temp[x][y] = temp[x-1][y];
+            }
+        }
+    }
+    return temp[num][totalWeight];
+    
+}
+
+
+int main()
+{
+    //Takes from input the maximum weight
+    short maxWeight;
+    cin >> maxWeight;
+    
+    //Takes from input the number of items
+    short numItems;
+    cin >> numItems;
+    
+    //Takes from input all the item weights and values
+    short *itemWeight = new short[maxWeight];
+    short *itemValue = new short[numItems];
+    
+    //Takes from input all the numbers to be stored in an array.
+    //cout << "Number of items and their associated value. " << endl; 
+    
+    for (int i = 0; i < numItems; i++)
+    {
+        cin >> itemWeight[i];
+        cin >> itemValue[i];
+    }
+    //Outputs returned result of knapSack function.
+    cout << knapSack(maxWeight, itemWeight, itemValue, numItems) << endl;
+    
+    
+   
+   return 0;
+}
+
+
+

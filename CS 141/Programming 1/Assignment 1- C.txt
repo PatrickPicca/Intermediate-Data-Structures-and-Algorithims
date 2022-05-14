@@ -1,0 +1,111 @@
+
+#include <iostream>
+
+
+using namespace std;
+
+
+int main()
+{
+    int k;
+    
+    //Takes from input the number of students.
+  //  cout << "Number of students." << endl; 
+    int nStudents;
+    cin >> nStudents;
+    
+    //Takes from input all the numbers to be stored in an array.
+  //  cout << "Value of each student" << endl; 
+    int *theArray = new int[nStudents];
+    for (int i = 0; i < nStudents; i++)
+    {
+        cin >> theArray[i];
+        
+    }
+    
+    //Performs an insertion sort on the array of integers
+    for (int j = 1; j < nStudents; j++)
+    {
+        int key = theArray[j];
+        
+        int i = j - 1;
+        while (i >= 0 && theArray[i] > key)
+        {
+            theArray[i+1] = theArray[i];
+            i = i - 1;
+        }
+        theArray[i+1] = key;
+        
+    }
+    
+    
+    
+    
+    //Outputs insertion sorted array
+    for (int z = 0; z < nStudents; z++)
+    {
+     //   cout << theArray[z] << " ";
+    }
+   // cout << endl;
+    
+    //Takes in total number of queries.
+    int queries;
+  //  cout << "Number of queries being performed" << endl;
+    cin >> queries;
+    
+    
+    //Array for obtaining each target number from the input
+    int *targets = new int[queries];
+    
+    //Forloop for the number of queries being performed.
+    for (int x = 0; x < queries; x++)
+    {
+      //  cout << "Please input the desired exam score you wish to obtain the ranking for." << endl;
+        cin >> targets[x];
+    }
+    
+    //Forloop to process each individual target number
+    for (int y = 0; y < queries; y++)
+    {
+        int counter = 1;
+        int lastscore = -5;
+       // cout << "Currently obtaining the exam score for the #" << targets[y] << " distinct score on the exam" << endl;
+        for (int z = nStudents-1; z >= 0; z--)
+        {
+            
+            //int theRank = nStudents-z;
+            
+            //If the desired disctint score is located, display it.
+            
+            
+            //If statement for if we want the first distinct score.
+            if (lastscore == -5 && counter == targets[y])
+            {
+                cout << theArray[z] << endl;
+                break;
+            }
+            else if (lastscore == -5)
+            {
+                lastscore = theArray[z];
+            }
+            
+            
+            if (theArray[z] != lastscore)
+            {
+                counter ++;
+                lastscore = theArray[z] ;
+            }
+            
+            if (counter == targets[y])
+            {
+                cout << theArray[z] << endl;
+                break;
+            }
+            
+        }
+    }
+    
+   return 0;
+}
+
+

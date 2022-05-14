@@ -1,0 +1,107 @@
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+#define INF 1000
+
+typedef pair<int, int> iPair;
+
+//Function that adds the conncected edges to the start and end node.
+void addEdge(vector <pair<int, int> > adj[], int u, int v, int weight)
+{
+    adj[u].push_back(make_pair(v, weight));
+    adj[v].push_back(make_pair(u, weight));
+}
+
+
+// Prints shortest paths from src to all other vertices
+void MST(vector<pair<int, int> > adj[], int numNodes)
+{
+    int cost = 0;
+    int src = 0;
+    priority_queue< iPair, vector <iPair>, greater<iPair> > theQueue;
+    vector<int> dist(numNodes, INF);
+
+    vector<bool> visited(numNodes, false);
+
+    vector<int> parent(numNodes, 0);
+
+    theQueue.push(make_pair(0, src));
+    dist[src] = 0;
+    
+    
+    //While loop to process all nodes within the priority queue
+    while (!theQueue.empty())
+    {
+        int lowest = theQueue.top().second;
+        theQueue.pop();
+        if(visited[lowest] == true)
+        {
+            continue;
+        }
+        visited[lowest] = true;
+        //Obtains all our adjacent edges
+        for (auto x : adj[lowest])
+        {
+            //Obtains the node position number followed by the weight of that nodes connection
+            int adjacentEdge = x.first;
+            int weight = x.second;
+            if (visited[adjacentEdge] == false && dist[adjacentEdge] > weight)
+            {
+                dist[adjacentEdge] = weight;
+                theQueue.push(make_pair(dist[adjacentEdge], adjacentEdge));
+                parent[adjacentEdge] = lowest;
+            }
+        }
+    }
+
+    //Adds up all distance values of our MST to return as our final asnwer.
+    for (int i = 0; i < numNodes; ++i)
+    {
+        cost += dist[i];
+    }
+    cout << cost;
+}
+
+
+// Driver program to test methods of graph class
+int main()
+{
+    ios_base::sync_with_stdio(false);
+
+    int numDevices;
+    int numPossibleConnections;
+    cin >> numDevices;
+    cin >> numPossibleConnections;
+
+    int node1;
+    int node2;
+    int edgeCost;
+
+    // create the graph given in above fugure
+    static const int numNodes = numDevices;
+    
+    vector<iPair > ourEdges[numNodes];
+
+    bool done = false;
+
+    for (int i = 0; i < numPossibleConnections; i++)
+    {
+        cin >> node1;
+        cin >> node2;
+        cin >> edgeCost;
+
+        ourEdges[node1].push_back(make_pair(node2, edgeCost));
+
+        ourEdges[node2].push_back(make_pair(node1, edgeCost));
+    }
+
+    MST(ourEdges, numNodes);
+
+    return 0;
+}

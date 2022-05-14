@@ -1,0 +1,74 @@
+
+
+#include <iostream>
+
+
+using namespace std;
+
+
+int main()
+{
+    //int k;
+    
+    //Takes from input the number of students.
+    //cout << "Number of departments. " << endl; 
+    double nDepartments;
+    cin >> nDepartments;
+    
+    
+    int halfmajority = (int)((nDepartments/2)+0.5);
+    //cout << "Half majority = " << halfmajority << endl;
+    int current = 0;
+    
+    //Takes from input all the numbers to be stored in an array.
+    //cout << "Number of Faculty members in this department. " << endl; 
+    int *facultyMembers = new int[(int)nDepartments];
+    for (int i = 0; i < nDepartments; i++)
+    {
+        cin >> facultyMembers[i];
+        
+    }
+    
+    //Performs an insertion sort on the array of integers
+    for (int j = 1; j < nDepartments; j++)
+    {
+        int key = facultyMembers[j];
+        
+        int i = j - 1;
+        while (i >= 0 && facultyMembers[i] > key)
+        {
+            facultyMembers[i+1] = facultyMembers[i];
+            i = i - 1;
+        }
+        facultyMembers[i+1] = key;
+        
+    }
+    
+    
+    
+    
+    //Outputs insertion sorted array
+    for (int z = 0; z < nDepartments; z++)
+    {
+    //    cout << facultyMembers[z] << " ";
+    }
+    //cout << endl;
+    
+    
+    for (int i = 0; i < halfmajority; i ++)
+    {
+    //    cout << "current facultyMembers index is " << facultyMembers[i] << endl;
+        int x = (int)((facultyMembers[i]/2)+1);
+    //    cout << "X is " << x << endl;
+        current += x;
+    }
+    
+    cout << current << endl; 
+    
+   
+   return 0;
+}
+
+
+
+

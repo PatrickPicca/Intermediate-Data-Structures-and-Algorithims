@@ -1,0 +1,139 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+// Utility function to find minimum of three numbers
+int min(int x, int y, int z)
+{
+    return min(min(x, y), z);
+}
+
+int editdistance(int a, int b, vector<int> aVector, vector<int> bVector)
+{
+    // Create a table to store results of subproblems
+    const int test = a;
+    //int dp[a + 1][b + 1];
+    vector< vector<int>> dp((a+1), vector<int>(b+1));
+
+    int sum = 0;
+    for (int x = 0; x < a+1; x++)
+    {
+        if (x == 0)
+            int sum = dp[x][0];
+        else
+        {
+        sum = (sum + aVector[x-1]);
+        //cout << aVector[x-1] << endl;
+        dp[x][0] = sum;
+        }
+        //cout << "Sum: " << sum << endl;
+    }
+    sum = 0;
+    for (int x = 0; x < b+1; x++)
+    {
+        if (x == 0)
+            int sum = dp[0][x];
+        else
+        {
+            sum = (sum + bVector[x-1]);
+            dp[0][x] = sum;
+        }
+        //cout << sum << endl;
+    }
+
+    // Fill d[][] in bottom up manner
+
+    //cout << "Value of a is " << a << endl;
+
+
+    for (int i = a; i >= 0; i--) {
+        for (int j = b; j >= 0; j--) {
+            // If first string is empty, only option is to
+            // insert all characters of second string
+            
+            //cout << "Here" << endl;
+            cout << "Right before first print " << endl;
+            cout << "AVector of index a is: " << aVector[i] << endl;
+
+            if (i == 0) {
+            //    cout << "Here in first if, before next " << endl;
+            //    dp[i][j] = j; // Min. operations = j
+                cout << "AVector of index 0 is: " << aVector[i] << endl;
+                return bVector[j];
+            }
+
+            // If second string is empty, only option is to
+            // remove all characters of second string
+            else if (j == 0) {
+            //    dp[i][j] = i; // Min. operations = i
+                cout << "bVector of index 0 is: " << aVector[i] << endl;
+                return aVector[i];
+            }
+            
+            //cout << "Here after bounary cases " << endl;
+
+            // If last characters are same, ignore last char
+            // and recur for remaining string
+            if (aVector[i] == bVector[j]) {
+                //dp[i][j] = dp[i - 1][j - 1];
+                return dp[i][j] = editdistance(a-1, b-1, aVector, bVector);
+            }
+            // If the last character is different, consider
+            // all possibilities and find the minimum
+            if (aVector[i] != bVector[j]) {
+                //dp[i][0] = i;
+                //dp[0][j] = j;
+                return dp[i][j] = min(
+                    editdistance(a, b-1, aVector, bVector) + aVector[i],
+                    editdistance(a-1, b, aVector, bVector) + bVector[j],
+                    editdistance(a-1 ,b-1, aVector, bVector) + abs(aVector[i] - bVector[j]));
+
+                //return dp[i][j] = min(
+                //    dp[i-1][j] + aVector[i],
+                //    dp[i][j-1] + bVector[j],
+                //    dp[i-1][j-1] + abs(aVector[i] - bVector[j]));
+
+                //cout << "Final = " << dp[i][j] << endl;;
+            }
+        }
+    }
+
+    return 0;
+}
+
+// Driver code
+int main() {
+
+
+    int a;
+    int b;
+    cin >> a;
+    cin >> b;
+
+    vector<int> aVec(1000);
+    vector<int> bVec(1000);
+
+    for (int i = 0; i < a; i++) {
+        cin >> aVec[i];
+    }
+
+    for (int i = 0; i < b; i++) {
+        cin >> bVec[i];
+    }
+
+    /*
+    for (int i = 0; i < a; i++) {
+        cout << aVec[i] << " ";
+    }
+
+    for (int i = 0; i < b; i++) {
+        cout << bVec[i] << " ";
+    }*/
+
+    cout << editdistance(a, b, aVec, bVec);
+
+
+    return 0;
+}

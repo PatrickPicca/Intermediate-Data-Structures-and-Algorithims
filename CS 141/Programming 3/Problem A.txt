@@ -1,0 +1,155 @@
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() 
+{
+    int j;
+    int temp;
+    int size = 0;
+    cin >> size;
+    
+    vector<int> theVector(size,0);
+    for(int i = 0; i < size; i++)
+    {
+        cin >> theVector[i];
+    }
+     
+    //Count is the current summed total of any 2 candy piles.
+    //Candies is the total number of candies.
+    int count = 0;
+    int candies = 0;
+     
+    for(int i = 1; i < size; i++)
+    {
+        temp = theVector[i];
+        j = i - 1;
+        while(j >= 0 && theVector[j] > temp)
+        {
+            theVector[j + 1] = theVector[j];
+            j = j - 1;
+        }
+        theVector[j + 1] = temp;
+    }
+    
+    //Create a temporary vector to copy the numbers in descending order.
+    vector<int> newVector(size,0);
+    for(int i = 0; i < size; i++)
+    {
+        newVector[i] = theVector[size-i-1];
+    }
+    for(int i = 0; i < size; i++)
+    {
+        theVector[i] = newVector[i];
+    }
+     
+    while(theVector.size() > 1)
+    {
+        //Count is the sum of the given 2 smallest numbers in the vectory. Count is added to our total number of candies
+        count = (theVector[theVector.size()-2] + theVector.back());
+        candies += count;
+        
+        //cout << "Candies is: " << candies << endl;
+        
+        //Removes the 2 lowest numbers by popping them out of the vector
+        theVector.pop_back();
+        theVector.pop_back();
+        //Adds into the vector the sum of the previously 2 lowest numbers
+        theVector.push_back(count);
+        
+        //Sort the vector of numbers using insertion sort again in descending order to account for the newly added summed number.
+        for(int i = 1; i < theVector.size(); i++)
+        {
+            temp = theVector[i];
+            j = i - 1;
+            while(j >= 0 && theVector[j] > temp)
+            {
+                theVector[j + 1] = theVector[j];
+                j = j - 1;
+            }
+            theVector[j + 1] = temp;
+        }
+        //Create a temporary vector to copy the numbers in descending order.
+        vector<int> newVector(theVector.size(),0);
+        for(int i = 0; i < theVector.size(); i++)
+        {
+            newVector[i] = theVector[theVector.size()-i-1];
+        }
+        for(int i = 0; i < theVector.size(); i++)
+        {
+            theVector[i] = newVector[i];
+        }
+    }
+    //multiply by 2 since values are counted twice (before and after merge)
+    int total = candies*2;
+    cout << total << endl;
+     
+    return 0;
+    
+    
+    /*
+    //Assign values of inputted array in a2
+    for(int i = 0; i < (size); i++)
+    {
+        a2[i] = theArray[i];
+    }
+    
+    
+    int topsum;
+    
+    //Iterates through the entirity of a2, beginning at the 3rd element, and uses our previously calculated current to begin summing up all inner nodes.
+    for(int i = 1; i < (size); i++)
+    {
+        if (i == 1)
+        {
+            a2[i] = a2[i]+a2[i-1];
+            current = a2[i]; 
+        }
+        else
+        {
+            a2[i] = a2[i]+current; 
+            current = a2[i]; 
+        }
+        
+        if (i != (size-1))
+            total += current;
+        else
+            topsum = current;
+            
+        temp2 = current;
+        int temp2;
+    
+        int working;
+        int y;
+        //Performs insertion sort on the array a2 beginning at index i as we are ignoring elements we no longer need.
+        for(int x = i+1; x < size; x++)
+        {
+            working = a2[x];
+            int y = x - 1;
+            while(y >= 0 && a2[y] > working)
+            {
+                a2[y + 1] = a2[y];
+                y = y - 1;
+            }
+            a2[y + 1] = working;
+            
+        }
+        current = a2[i];
+        
+    }
+    
+    
+    int sum_og_a = 0;
+    for(int i = 0; i < size; i++)
+    {
+      sum_og_a += theArray[i];
+    }
+    total = total*2;
+    
+    cout << (sum_og_a+total+topsum) << endl;
+    */
+}
+
+

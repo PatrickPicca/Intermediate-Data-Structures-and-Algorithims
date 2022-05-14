@@ -1,0 +1,121 @@
+#include <iostream>
+#include <string>
+#include <functional>
+#include <queue>
+#include <vector>
+#include <climits>
+
+using namespace std;
+
+//prim's
+   
+int minimum(int distance[], bool visited[], int numNodes) 
+{
+    int minimum = INT_MAX;
+    int min_index = 0;
+              
+    //Iterates through all nodes nodes, checks for the nodes that we have not yet visited, and from those nodes obtains the
+    //edge with the smallest distance, returning the nodes position number.
+    for(int i = 0; i < numNodes; i++)
+    {
+        if(visited[i] == false && distance[i] <= minimum)
+        {
+            minimum = distance[i];
+            min_index = i;
+        }
+    }
+    return min_index;
+}
+
+void minimumSpanningTree(int** edges, int numNodes)
+{
+    //cout << endl << s;
+    int* distance = new int[numNodes];
+    bool* visited = new bool[numNodes];
+    int* mst = new int[numNodes];
+    int cost = 0;
+
+    for (int i = 0; i < numNodes; i++)
+    {
+        //set distances to infinity 
+        // at this point all nodes have not been visited so set to false 
+        distance[i] = INT_MAX;
+        visited[i] = false;
+        mst[i] = 0;
+        //cout <<"here";
+    }
+
+    //Starting node is always 0 so initialize its distance as 0.
+    distance[0] = 0; 
+    mst[0] = 0;
+    int max = 0;
+    //Iterates through n-1 nodes.
+    for(int i = 0; i < numNodes-1; i++)
+    {
+        //Calls the minimum function, passing in our array of current distance values, whether or not any of our nodes is
+        //visited, and the total number of nodes.
+        int m = minimum(distance, visited, numNodes); 
+        //The return node position is the node we choose to visit, so we set it to true.
+        visited[m] = true;
+        for(int i = 0; i < numNodes; i++)
+        {
+            //If the cost of that node to any other adjacent node is less than the cost of the other current available  nodes, 
+            //We add that nodes cost to our final mst array, setting its distance accordingly. 
+            if(edges[m][i] && !visited[i] && edges[m][i] < distance[i])
+            {
+              cout << "Distance of edges[m][i] is: " << edges[m][i] << endl;
+              cout << "Distance of index i is: " << distance[i] << endl;
+              mst[i] = m;
+              distance[i] = edges[m][i];
+                //relax neighbors
+                //cur_dis + edge_dis ^^
+            
+            }
+        }
+    }
+    
+    //Adds up the costs of all the chosen edges for our MST.
+    for (int i = 0; i < numNodes; i++) 
+    {
+      if (edges[i][mst[i]] > max)
+        max = edges[i][mst[i]];
+    }
+    cout << max;
+}
+
+int main()
+{
+
+    ios_base::sync_with_stdio(false);
+
+    int numDevices;
+    int numPossibleConnections;
+    cin >> numDevices;
+    cin >> numPossibleConnections;
+
+    int node1;
+    int node2;
+    int edgeCost;
+    
+    int** edges = new int*[numDevices];
+    for(int i = 0; i < numDevices; i++)
+    {
+        edges[i] = new int[numDevices];
+        for (int j = 0; j < numDevices; j++)
+        {
+            edges[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < numPossibleConnections; i++)
+    {
+        cin >> node1;
+        cin >> node2;
+        cin >> edgeCost;
+        edges[node1][node2] = edgeCost;
+        edges[node2][node1]  = edgeCost;
+    }
+   minimumSpanningTree(edges,numDevices);
+
+
+}

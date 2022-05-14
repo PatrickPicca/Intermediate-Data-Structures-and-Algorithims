@@ -1,0 +1,143 @@
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+#define INF 1000
+
+typedef pair<int, int> iPair;
+
+//Function that adds the conncected edges to the start and end node.
+void addEdge(vector <pair<int, int> > adj[], int u, int v, int weight)
+{
+    adj[u].push_back(make_pair(v, weight));
+}
+
+
+// Prints shortest paths from src to all other vertices
+void MST(vector<pair<int, int> > adj[], int numNodes, vector<int> nodeCosts[])
+{
+    int cost = 0;
+    int src = 0;
+    priority_queue< iPair, vector <iPair>, greater<iPair> > theQueue;
+    vector<int> dist(numNodes, INF);
+
+    vector<bool> visited(numNodes, false);
+
+    theQueue.push(make_pair(0, src));
+    dist[src] = 1000;
+    
+    int cumulativeCost = 0;
+    int currentHighestGross = 0;
+    bool isDone = false;
+    //While loop to process all nodes within the priority queue
+    while (!theQueue.empty())
+    {
+        int lowest = theQueue.top().second;
+        cout << "We are popping: " << lowest << endl;
+
+        if (nodeCosts[lowest].at(0) >  currentHighestGross)
+          currentHighestGross = nodeCosts[lowest].at(0);
+
+
+        cout << "The gross we can obtain: " << nodeCosts[lowest].at(0) << endl;
+
+
+        theQueue.pop();
+        if(visited[lowest] == true)
+        {
+            continue;
+        }
+        visited[lowest] = true;
+        if (lowest == 0 && isDone == false)
+        {
+          visited[lowest] = false; 
+          isDone = true;
+        }
+
+        //If the current node has no adjacent edges, this means we did not fine a loop.
+        if (adj[lowest].size() == 0)
+        {
+
+        }
+        else
+        {
+          //Obtains all our adjacent edges
+          for (auto x : adj[lowest])
+          {
+              //Obtains the node position number followed by the weight of that nodes connection
+              int adjacentEdge = x.first;
+              int weight = x.second;
+
+                  cout << "The position number of this node we are pushing is:" << adjacentEdge << endl;
+                  cout << "Is this node visited?:" << visited[adjacentEdge] << endl;
+                  cout << "The travel cost of this node is :" << weight << endl;
+              
+              if (visited[adjacentEdge] == false && dist[adjacentEdge] > weight)
+              {
+                //  cout << "The position number of this node we are pushing is:" << adjacentEdge << endl;
+                // cout << "The travel cost of this node is :" << weight << endl;
+                  cumulativeCost += weight;
+                  dist[adjacentEdge] = weight;
+                  theQueue.push(make_pair(dist[adjacentEdge], adjacentEdge));
+              }
+          }
+        }
+    }
+
+
+    int finalProfit = currentHighestGross - cumulativeCost;
+
+    cout << finalProfit << endl;
+}
+
+
+// Driver program to test methods of graph class
+int main()
+{
+    ios_base::sync_with_stdio(false);
+
+    int numDevices;
+    int numPossibleConnections;
+    cin >> numDevices;
+    cin >> numPossibleConnections;
+
+    int node1;
+    int node2;
+    int edgeCost;
+
+    vector<int> grossProfit[numDevices];
+    for (int i = 0; i < numPossibleConnections; i++)
+    {
+        int temp;
+        cin >> temp;
+        grossProfit[i].push_back(temp);
+
+    }
+
+    // create the graph given in above fugure
+    static const int numNodes = numDevices;
+    
+    vector<iPair > ourEdges[numNodes];
+
+    bool done = false;
+
+    for (int i = 0; i < numPossibleConnections; i++)
+    {
+        cin >> node1;
+        cin >> node2;
+        cin >> edgeCost;
+
+        ourEdges[node1].push_back(make_pair(node2, edgeCost));
+
+        //ourEdges[node2].push_back(make_pair(node1, edgeCost));
+    }
+
+    MST(ourEdges, numNodes, grossProfit);
+
+    return 0;
+}
